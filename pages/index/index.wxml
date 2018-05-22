@@ -4,7 +4,8 @@
             <view class='others sms' id="sms{{index}}">
                 <image src='../../imgs/avater.png'></image>
                 <view>
-                    <text>{{item.txt}}</text>
+                    <image src='../../imgs/30.gif' class='loading' wx:if="{{item.isload}}"></image>
+                    <text wx:else>{{item.txt}}</text>
                 </view>
             </view>
         </block>
@@ -13,7 +14,7 @@
                 <view>
                     <text>{{item.txt}}</text>
                 </view>
-                <image src='../../imgs/avater.png'></image>
+                <image src='{{userInfo.avatarUrl}}'></image>
             </view>
         </block>
 
@@ -23,4 +24,8 @@
 <view class='sendsms'>
     <input placeholder="请输入内容" bindinput='smsContent' value='{{sms}}' bindconfirm="sendSms" />
     <button bindtap='sendSms'>发送</button>
+</view>
+
+<view class='getauth' wx:if="{{auth}}">
+    <button open-type='getUserInfo' bindgetuserinfo="getUserInfos">授权</button>
 </view>
