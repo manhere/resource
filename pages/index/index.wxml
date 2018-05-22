@@ -1,0 +1,26 @@
+<scroll-view scroll-into-view="{{toView}}" scroll-y style="height:{{wh-60}}px">
+    <block wx:for="{{smsList}}" wx:key="unique">
+        <block wx:if="{{item.tpy === 'others'}}">
+            <view class='others sms' id="sms{{index}}">
+                <image src='../../imgs/avater.png'></image>
+                <view>
+                    <text>{{item.txt}}</text>
+                </view>
+            </view>
+        </block>
+        <block wx:else>
+            <view class='mysms sms' id="sms{{index}}">
+                <view>
+                    <text>{{item.txt}}</text>
+                </view>
+                <image src='../../imgs/avater.png'></image>
+            </view>
+        </block>
+
+    </block>
+</scroll-view>
+
+<view class='sendsms'>
+    <input placeholder="请输入内容" bindinput='smsContent' value='{{sms}}' bindconfirm="sendSms" />
+    <button bindtap='sendSms'>发送</button>
+</view>
