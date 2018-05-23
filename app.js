@@ -12,31 +12,35 @@ App({
         wh:0,
         requestUrl: 'https://t.lovezyd.com/Api/Index'
     },
-    wxLogin: function (encryptedData,iv,fun) {
+    registerUser: function (encryptedData, iv, fun) {
         var self = this;
         wx.login({
             success: function (res) {
-                console.log(res)
-                if (res.code) {
-                    wx.request({
-                        url: self.globalData.requestUrl + '/wxLogin',
-                        method: 'POST',
-                        header: { 'content-type': 'application/x-www-form-urlencoded' },
-                        data: {
-                            code: res.code,
-                            encryptedData: encryptedData,
-                            iv:iv
-                        },
-                        success:function(result){
-                            wx.setStorageSync('session_id', result.data.session_id)
-                            fun();
-                            console.log(result)
-                        }
-                    })
+                var data = {};
+                if (encryptedData && iv) {
+                    data = {
+                        code: res.code,
+                        encryptedData: encryptedData,
+                        iv: iv
+                    }
                 } else {
-                    self.wxLogin();
+                    data = {
+                        code: res.code
+                    }
                 }
+                wx.request({
+                    url: self.globalData.requestUrl + '/wxLogin',
+                    method: 'POST',
+                    header: { 'content-type': 'application/x-www-form-urlencoded' },
+                    data: data,
+                    success: function (r) {
+                        if (r.data.status == 1) {
+                            wx.setStorageSync('session_id', r.data.session_id);
+                            fun();
+                        }
+                    }
+                })
             }
-        });
+        })
     }
 })

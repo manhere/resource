@@ -1,8 +1,11 @@
-<scroll-view scroll-into-view="{{toView}}" scroll-y style="height:{{wh-60}}px">
+<scroll-view scroll-into-view="{{toView}}" scroll-y='true' enable-back-to-top="true" style="height:{{wh-60}}px">
+<view class='scrollWrap'>
+
     <block wx:for="{{smsList}}" wx:key="unique">
         <block wx:if="{{item.tpy === 'others'}}">
             <view class='others sms' id="sms{{index}}">
-                <image src='../../imgs/avater.png'></image>
+                 <view class='blank' wx:if="{{!item.showAvater}}"></view> 
+                 <image src='../../imgs/avater.jpg' wx:else></image> 
                 <view>
                     <image src='../../imgs/30.gif' class='loading' wx:if="{{item.isload}}"></image>
                     <text wx:else>{{item.txt}}</text>
@@ -19,13 +22,18 @@
         </block>
 
     </block>
+    </view>
 </scroll-view>
 
-<view class='sendsms'>
+<view class='sendsms' id="rollend">
     <input placeholder="请输入内容" bindinput='smsContent' value='{{sms}}' bindconfirm="sendSms" />
-    <button bindtap='sendSms'>发送</button>
+    <button bindtap='sendSms' style="background-color:{{sms?'#f4d046':'eaeaea'}};">发送</button>
 </view>
 
-<view class='getauth' wx:if="{{auth}}">
-    <button open-type='getUserInfo' bindgetuserinfo="getUserInfos">授权</button>
+
+<view class='mask' wx:if="{{mask}}"></view>
+<view class='authModal' wx:if="{{auth}}">
+    <image src='../../imgs/qidai.gif'></image>
+    <text>此操作需要你授权个人信息！</text>
+    <button open-type='getUserInfo' bindgetuserinfo="getUserInfos">确认授权</button>
 </view>

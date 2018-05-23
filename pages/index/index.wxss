@@ -1,8 +1,9 @@
 /**index.wxss**/
 page {
     position: relative;
-    background-color: #ebebeb;
+    background-color: #fff;
     padding: 0 0 90rpx;
+    border-top: 2rpx solid #e8e8e8;
 }
 
 .others {
@@ -14,12 +15,13 @@ page {
     margin-right: 128rpx;
 }
 
-.others image {
+.others image,.others view.blank {
     height: 74rpx;
     width: 74rpx;
     margin-right: 10rpx;
     flex: 0 0 auto;
     border-radius: 50%;
+    background-color: transparent;
 }
 
 .others .loading{
@@ -30,9 +32,9 @@ page {
 }
 
 .others view {
-    background-color: #fff;
+    background-color: #f6f6f6;
     box-sizing: border-box;
-    font-size: 30rpx;
+    font-size: 34rpx;
     padding: 18rpx;
     border-radius: 10rpx;
     color: #000;
@@ -59,7 +61,7 @@ page {
 .mysms view {
     background-color: #a0e75a;
     box-sizing: border-box;
-    font-size: 30rpx;
+    font-size: 34rpx;
     padding: 18rpx;
     border-radius: 10rpx;
     color: #000;
@@ -77,16 +79,17 @@ page {
     align-items: center;
     padding: 12rpx 18rpx;
     box-sizing: border-box;
-    background-color: #f5f5f6;
+    background-color: #fff;
+    border-top: 2rpx solid #e8e8e8;
 }
 
 .sendsms input{
     height: 66rpx;
-    background-color: #fcfcfc;
+    background-color: #eaeaea;
     border-radius: 10rpx;
     flex: 1;
     font-size: 30rpx;
-    padding: 0 10rpx;
+    padding: 0 15rpx;
 }
 
 .sendsms button{
@@ -96,8 +99,70 @@ page {
     flex: 0 0 auto;
     margin-left: 16rpx;
     font-size: 30rpx;
+    background-color: #eaeaea;
 }
 
 .sms{
     margin-top: 28rpx;
+}
+.sms:first-child{
+    margin-top: 0;
+}
+scroll-view{
+    padding-top: 28rpx;
+    box-sizing: border-box;
+}
+.mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.authModal {
+    width: 340rpx;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 22rpx 0 0;
+    box-sizing: border-box;
+    border-radius: 10rpx;
+    font-size: 30rpx;
+}
+
+.authModal image {
+    width: 148rpx;
+    height: 148rpx;
+}
+
+.authModal text {
+    text-align: center;
+    margin: 20rpx 22rpx;
+    color: #f40;
+}
+
+.authModal button {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    background-color: #f40;
+    color: #fff;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 10rpx;
+    border-bottom-right-radius: 10rpx;
+}
+
+.authModal button::after {
+    border: none;
 }

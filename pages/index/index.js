@@ -1,5 +1,4 @@
 //index.js
-const utils = require('../../utils/util.js');
 const app = getApp()
 Page({
     data: {
@@ -7,6 +6,7 @@ Page({
         smsList: [],
         toView: 'smsl0',
         wh: 0,
+        mask: false,
         auth: false,
         userInfo: {},
         keywords: ''
@@ -20,31 +20,11 @@ Page({
             this.setData({
                 userInfo: wx.getStorageSync('userInfo')
             });
-            
+
         } else {
-            this.getUserInfo(function () { });
+            this.reCheckAuth();
         }
         this.getWelcomeSms();
-    },
-    getUserInfo: function (fun) {
-        var self = this;
-        wx.getUserInfo({
-            success: function (res) {
-                console.log(res)
-                wx.setStorageSync('userInfo', res.userInfo)
-                app.wxLogin(res.encryptedData, res.iv, function () {
-                    self.setData({
-                        auth: false
-                    });
-                    fun();
-                });
-            },
-            fail: function (err) {
-                self.setData({
-                    auth: true
-                });
-            }
-        })
     },
     getWelcomeSms: function () {
         var self = this;
@@ -56,27 +36,16 @@ Page({
                 sessionId: wx.getStorageSync('session_id')
             },
             success: function (result) {
-                console.log(result)
                 if (result.data.status == 2) {
-                    self.getUserInfo(function () {
-                        self.getWelcomeSms();
+                    self.reCheckAuth(function(){
+                        self.onLoad();
                     });
                 } else {
-                    var tmp = [];
-                    tmp.push({
-                        txt: result.data.data.title1, tpy: 'others'
-                    });
-                    tmp.push({
-                        txt: result.data.data.title2, tpy: 'others'
-                    });
-                    tmp.push({
-                        txt: result.data.data.title3, tpy: 'others'
-                    });
-                    console.log(tmp)
-                    self.setData({
-                        loading: false,
-                        smsList: tmp
-                    });
+                    self.timeOrder([
+                        { msg: result.data.data.title1, tpy: 'others', showAvater: true },
+                        { msg: result.data.data.title2, tpy: 'others', showAvater: false },
+                        { msg: result.data.data.title3, tpy: 'others', showAvater: false }
+                    ]);
                 }
             }
         })
@@ -87,34 +56,19 @@ Page({
         })
     },
     sendSms: function () {
-        var tmp = this.data.smsList;
-        tmp.push({ txt: this.data.sms, tpy: 'mysms' });
-        this.setData({
-            smsList: tmp,
-            sms: '',
-            keywords: this.data.sms
-        });
-        this.getResSms();
-        if (this.data.smsList.length >= 6) {
+        if (this.data.sms){
+            var tmp = this.data.smsList;
+            tmp.push({ txt: this.data.sms, tpy: 'mysms', showAvater: true });
             this.setData({
-                toView: 'sms' + (this.data.smsList.length - 1)
+                smsList: tmp,
+                sms: '',
+                keywords: this.data.sms
             });
+            this.getSmsResponse();
         }
     },
-    getResSms: function () {
-        var tmp = this.data.smsList;
-        // tmp.push({ txt: Math.random(), tpy: 'others' });
-        tmp.push({ txt: '', tpy: 'others', isload: true });
-        this.setData({
-            smsList: tmp
-        });
-        if (this.data.smsList.length >= 6) {
-            this.setData({
-                toView: 'sms' + (this.data.smsList.length - 1)
-            });
-        }
+    getSmsResponse: function () {
         var self = this;
-
         wx.request({
             url: app.globalData.requestUrl + '/getContent',
             method: 'POST',
@@ -124,38 +78,89 @@ Page({
                 keyWords: self.data.keywords
             },
             success: function (result) {
-                console.log(result)
                 if (result.data.status == 2) {
-                    self.getUserInfo(function () {
-                        self.getResSms();
+                    self.reCheckAuth(function () {
+                        self.getSmsResponse();
                     });
-                } else {
-                    setTimeout(function () {
-                        if (result.data.status == 0) {
-                            tmp[tmp.length - 1].txt = result.data.info;
-                        } else {
-                            tmp[tmp.length - 1].txt = result.data.data;
+                } else if (result.data.status == 1) {
+                    if (result.data.data.length==1){
+                        self.timeOrder([
+                            { msg: result.data.data[0], tpy: 'others', showAvater: true }
+                        ]);
+                    }else{
+                        var obj = [];
+                        for (var i = 0; i < result.data.data.length;i++){
+                            obj[i] = { msg: result.data.data[i], tpy: 'others', showAvater: i == 0 ? true:false};
                         }
-                        tmp[tmp.length - 1].isload = false;
-                        self.setData({
-                            smsList: tmp
-                        });
-                    }, 1000);
+                        self.timeOrder(obj);
+                    }
+                }else{
+                    self.timeOrder([{ msg: result.data.info, tpy: 'others', showAvater: true }]);
                 }
             }
         })
     },
-    getUserInfos: function (e) {
-        console.log(e)
+    timeOrder: function (arr) {
+        this.getResSms(arr[0]);
+        arr.shift();
+        if (arr.length >= 1) {
+            var self = this;
+            setTimeout(function () {
+                self.timeOrder(arr);
+            }, 800);
+        }
+    },
+    getResSms: function (obj) {
+        var tmp = this.data.smsList;
+        tmp.push({ txt: '', tpy: obj.tpy, isload: true, showAvater: obj.showAvater });
+        this.setData({
+            smsList: tmp
+        });
+
         var self = this;
+        setTimeout(function () {
+            tmp[tmp.length - 1].txt = obj.msg;
+            tmp[tmp.length - 1].isload = false;
+            self.setData({
+                smsList: tmp
+            });
+        }, 800);
+        this.setData({
+            toView: 'sms' + (this.data.smsList.length - 1)
+        });
+    },
+    getUserInfos: function (e) {
         if (e.detail.userInfo) {
-            wx.setStorageSync('userInfo', e.detail.userInfo)
-            app.wxLogin(e.detail.encryptedData, e.detail.iv, function () {
-                self.setData({
-                    auth: false
-                });
-                self.onLoad();
+            this.signUser(e.detail.encryptedData, e.detail.iv, e.detail.userInfo);
+            this.setData({
+                auth: false,
+                mask: false
             });
         }
+    },
+    signUser: function (encryptedData, iv, userInfo, fun) {
+        var self = this;
+        app.registerUser(encryptedData, iv, function () {
+            wx.setStorageSync('userInfo', userInfo);
+            if (fun) {
+                fun();
+            } else {
+                self.onLoad();
+            }
+        });
+    },
+    reCheckAuth: function (fun) {
+        var self = this;
+        wx.getUserInfo({
+            success: function (res) {
+                self.signUser(res.encryptedData, res.iv, res.userInfo, fun);
+            },
+            fail: function (res) {
+                self.setData({
+                    auth: true,
+                    mask: true
+                });
+            }
+        });
     }
 })
