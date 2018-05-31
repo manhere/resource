@@ -9,6 +9,7 @@
                 <view>
                     <image src='../../imgs/30.gif' class='loading' wx:if="{{item.isload}}"></image>
                     <text wx:else>{{item.txt}}</text>
+                    <image wx:if="{{item.hasImg}}" src='{{item.img}}'></image>
                 </view>
             </view>
         </block>

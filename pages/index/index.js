@@ -20,11 +20,13 @@ Page({
             this.setData({
                 userInfo: wx.getStorageSync('userInfo')
             });
-
+            this.getWelcomeSms();
         } else {
-            this.reCheckAuth();
+            this.reCheckAuth(function(){
+                self.onLoad();
+            });
         }
-        this.getWelcomeSms();
+        
     },
     getWelcomeSms: function () {
         var self = this;
