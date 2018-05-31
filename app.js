@@ -5,11 +5,13 @@ App({
         wx.getSystemInfo({
             success: function (res) {
                 self.globalData.wh = res.windowHeight;
+                self.globalData.ww = res.windowWidth;
             }
         })
     },
     globalData: {
         wh:0,
+        ww:0,
         requestUrl: 'https://t.lovezyd.com/Api/Index'
     },
     registerUser: function (encryptedData, iv, fun) {

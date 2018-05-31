@@ -1,28 +1,32 @@
 <scroll-view scroll-into-view="{{toView}}" scroll-y='true' enable-back-to-top="true" style="height:{{wh-60}}px">
-<view class='scrollWrap'>
+    <view class='scrollWrap'>
 
-    <block wx:for="{{smsList}}" wx:key="unique">
-        <block wx:if="{{item.tpy === 'others'}}">
-            <view class='others sms' id="sms{{index}}">
-                 <view class='blank' wx:if="{{!item.showAvater}}"></view> 
-                 <image src='../../imgs/avater.jpg' wx:else></image> 
-                <view>
-                    <image src='../../imgs/30.gif' class='loading' wx:if="{{item.isload}}"></image>
-                    <text wx:else>{{item.txt}}</text>
-                    <image wx:if="{{item.hasImg}}" src='{{item.img}}'></image>
+        <block wx:for="{{smsList}}" wx:key="unique">
+            <block wx:if="{{item.tpy === 'others'}}">
+                <view class='others sms' id="sms{{index}}">
+                    <view class='blank' wx:if="{{!item.showAvater}}"></view>
+                    <image src='../../imgs/avater.jpg' wx:else class='avaterImg'></image>
+                    <view>
+                        <block wx:if="{{item.hasImg}}">
+                            <image src='{{item.txt}}' bindtap='scaleImg' data-src="{{item.txt}}" style="width:{{ww-128}}px"></image>
+                        </block>
+                        <block wx:else>
+                            <image src='../../imgs/30.gif' class='loading' wx:if="{{item.isload}}"></image>
+                            <text wx:else>{{item.txt}}</text>
+                        </block>
+                    </view>
                 </view>
-            </view>
-        </block>
-        <block wx:else>
-            <view class='mysms sms' id="sms{{index}}">
-                <view>
-                    <text>{{item.txt}}</text>
+            </block>
+            <block wx:else>
+                <view class='mysms sms' id="sms{{index}}">
+                    <view>
+                        <text>{{item.txt}}</text>
+                    </view>
+                    <image src='{{userInfo.avatarUrl}}' class='avaterImg'></image>
                 </view>
-                <image src='{{userInfo.avatarUrl}}'></image>
-            </view>
-        </block>
+            </block>
 
-    </block>
+        </block>
     </view>
 </scroll-view>
 

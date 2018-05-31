@@ -6,6 +6,7 @@ Page({
         smsList: [],
         toView: 'smsl0',
         wh: 0,
+        ww:0,
         mask: false,
         auth: false,
         userInfo: {},
@@ -13,7 +14,8 @@ Page({
     },
     onLoad: function () {
         this.setData({
-            wh: app.globalData.wh
+            wh: app.globalData.wh,
+            ww: app.globalData.ww
         });
         var self = this;
         if (wx.getStorageSync('userInfo')) {
@@ -44,9 +46,9 @@ Page({
                     });
                 } else {
                     self.timeOrder([
-                        { msg: result.data.data.title1, tpy: 'others', showAvater: true },
-                        { msg: result.data.data.title2, tpy: 'others', showAvater: false },
-                        { msg: result.data.data.title3, tpy: 'others', showAvater: false }
+                        { msg: { is_img: false, v: result.data.data.title1 + ',' + self.data.userInfo.nickName}, tpy: 'others', showAvater: true },
+                        { msg: { is_img: false, v:result.data.data.title2}, tpy: 'others', showAvater: false },
+                        { msg: { is_img: false, v:result.data.data.title3}, tpy: 'others', showAvater: false }
                     ]);
                 }
             }
@@ -121,7 +123,9 @@ Page({
 
         var self = this;
         setTimeout(function () {
-            tmp[tmp.length - 1].txt = obj.msg;
+            tmp[tmp.length - 1].hasImg = obj.msg.is_img;
+            tmp[tmp.length - 1].txt = obj.msg.v;
+            
             tmp[tmp.length - 1].isload = false;
             self.setData({
                 smsList: tmp
@@ -164,5 +168,10 @@ Page({
                 });
             }
         });
+    },
+    scaleImg:function(e){
+        wx.previewImage({
+            urls: [e.currentTarget.dataset.src] 
+        })
     }
 })

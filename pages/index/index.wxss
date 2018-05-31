@@ -1,4 +1,5 @@
 /**index.wxss**/
+
 page {
     position: relative;
     background-color: #fff;
@@ -15,7 +16,7 @@ page {
     margin-right: 128rpx;
 }
 
-.others image,.others view.blank {
+.others .avaterImg {
     height: 74rpx;
     width: 74rpx;
     margin-right: 10rpx;
@@ -24,7 +25,16 @@ page {
     background-color: transparent;
 }
 
-.others .loading{
+.others view.blank {
+    height: 74rpx;
+    width: 74rpx;
+    margin-right: 10rpx;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background-color: transparent;
+}
+
+.others .loading {
     width: 160rpx;
     height: 20rpx;
     margin: 0;
@@ -39,7 +49,10 @@ page {
     border-radius: 10rpx;
     color: #000;
 }
-
+.resImg{
+    width: 100%;
+    height: 100%;
+}
 .mysms {
     display: flex;
     flex-direction: row;
@@ -50,7 +63,7 @@ page {
     margin-left: 128rpx;
 }
 
-.mysms image {
+.mysms .avaterImg {
     height: 74rpx;
     width: 74rpx;
     margin-left: 10rpx;
@@ -67,7 +80,7 @@ page {
     color: #000;
 }
 
-.sendsms{
+.sendsms {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -83,7 +96,7 @@ page {
     border-top: 2rpx solid #e8e8e8;
 }
 
-.sendsms input{
+.sendsms input {
     height: 66rpx;
     background-color: #eaeaea;
     border-radius: 10rpx;
@@ -92,7 +105,7 @@ page {
     padding: 0 15rpx;
 }
 
-.sendsms button{
+.sendsms button {
     width: 150rpx;
     height: 66rpx;
     line-height: 66rpx;
@@ -102,16 +115,19 @@ page {
     background-color: #eaeaea;
 }
 
-.sms{
+.sms {
     margin-top: 28rpx;
 }
-.sms:first-child{
+
+.sms:first-child {
     margin-top: 0;
 }
-scroll-view{
+
+scroll-view {
     padding-top: 28rpx;
     box-sizing: border-box;
 }
+
 .mask {
     position: fixed;
     left: 0;

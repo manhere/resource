@@ -5,7 +5,7 @@
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "智能核保",
+    "navigationBarTitleText": "志愿专家",
     "navigationBarTextStyle":"black"
   }
 }
